@@ -8,8 +8,8 @@ type node =
   | Define of string * node option
   | Assign of string * node
 
-  | Loop of string * block
-  (* label, body *)
+  | Loop of string * iterop option * itercond option * block
+  (* label, operation, stop-condition, body *)
   | Break
   | If of node * block option * block option
   (* condition, if-body, else-body *)
@@ -37,9 +37,9 @@ type node =
 
 and block = node list
 
-and iterop = UPPIN | NERFIN | Func of string
+and iterop = Inc of string | Dec of string
 
-and itercond = TIL | WILE
+and itercond = Until of node | While of node
 
 and unary_op = Neg | Not
 and binary_op =

@@ -31,8 +31,20 @@ let rec string_of_node = function
   | Assign (var, value) ->
     "LOL " ^ var ^ " R " ^ string_of_node value
 
-  | Loop (label, body) ->
-    "IM IN YR " ^ label ^ nl ^
+  | Loop (label, op, cond, body) ->
+    let op =
+      match op with
+      | None -> ""
+      | Some (Inc var) -> " UPPIN YR " ^ var
+      | Some (Dec var) -> " NERFIN YR " ^ var
+    in
+    let cond =
+      match cond with
+      | None -> ""
+      | Some (Until expr) -> " TIL " ^ string_of_node expr
+      | Some (While expr) -> " WILE " ^ string_of_node expr
+    in
+    "IM IN YR " ^ label ^ op ^ cond ^ nl ^
     indent (string_of_block body) ^
     "IM OUTTA YR " ^ label
 
@@ -100,6 +112,7 @@ let rec string_of_node = function
       | Xor -> "WON OF"
       | Max -> "BIGGR OF"
       | Min -> "SMALLR OF"
+      | _ -> raise (Failure "impossibru")
     end ^
     " " ^ string_of_node left ^ " AN " ^ string_of_node right
 
