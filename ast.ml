@@ -2,36 +2,38 @@
  * https://github.com/justinmeza/lolcode-spec/blob/master/v1.2/lolcode-spec-v1.2.md *)
 
 type node =
-  (* top-level *)
-
   | Program of block
   | Include of string
+
   | Define of string * node option
+  | Assign of string * node
 
-  (* statements *)
-
-  | Loop of string * (iterop * string) option * (itercond * node) option * block
-  (* label, [operation], [condition], body *)
-  | If of node * block * block
-  (* condition, if-body, else-body *)
-  | Switch of (node * block) list
-  (* (const value, body) list *)
-  | Output of node
+  | Loop of string * block
+  (* label, body *)
   | Break
-  | Break_if of node
+  | If of node * block option * block option
+  (* condition, if-body, else-body *)
+  | Switch of (node * block) list * block option
+  (* (value, body) list, default-body *)
+  | Input of string
+  | Output of node * bool
+  (* string, output-newline *)
 
-  (* expressions *)
+  | Open of string * block option * block option
+  (* filename, success-body, fail-body *)
+  | Increment of string * int
+  | Nop
 
-  | Op of op * node list
+  | Unary of unary_op * node
+  | Binary of binary_op * node * node
+  | Var of string
   | Const_int of int
   | Const_float of float
   | Const_bool of bool
   | Const_string of string
+  (* varname, filename *)
 
-  (* comments *)
-
-  | Comment of node * string
-  | Multiline_comment of string
+  | Comment of string
 
 and block = node list
 
@@ -39,8 +41,11 @@ and iterop = UPPIN | NERFIN | Func of string
 
 and itercond = TIL | WILE
 
-and op =
-  | Add | Sub | Mul | Div | Mod | Max | Min
+and unary_op = Neg | Not
+and binary_op =
+  | Gt | Lt | Ge | Le | Eq | Ne
+  | Add | Sub | Mul | Div | Mod
   | And | Or | Xor
+  | Max | Min
 
 type ty = Bool | Int | Float | String | Undef
